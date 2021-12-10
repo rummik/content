@@ -5,9 +5,9 @@ browser-compat: api.NotificationAction
 ---
 {{APIRef("Web Notifications")}}{{AvailableInWorkers}}{{securecontext_header}}
 
-The `NotificationAction` interface of the [Notifications API](/en-US/docs/Web/API/Notifications_API) is used to represent action buttons the user can click to interact with notifications.
+The `NotificationAction` dictionary defines the members that can be specified for the `actions` option of the second argument for the [`showNotification()`](/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification) method and [`Notification()`](/en-US/docs/Web/API/Notification/Notification) constructor, representing actions the user can choose from to interact with notifications.
 
-These buttons' appearance and specific functionality vary across platforms but generally they provide a way to asynchronously show actions to the user in a notification.
+Browsers expose the specified actions to the user asynchronously, through the user interface that displays the actions may vary across platforms.
 
 ## Properties
 
@@ -16,7 +16,7 @@ These buttons' appearance and specific functionality vary across platforms but g
 These properties are available only on instances of the `Notification` object.
 
 - {{domxref("NotificationAction.action")}} {{readonlyinline}}
-  - : The name of the action, which can be used to identify the clicked action similar to [input names](/en-US/docs/Web/API/Element/name).
+  - : The name of the action, which can be used to identify the clicked action.
 - {{domxref("NotificationAction.title")}} {{readonlyinline}}
   - : The string describing the action that is displayed to the user.
 - {{domxref("NotificationAction.icon")}} {{readonlyinline}}
@@ -29,13 +29,19 @@ Notifications can fire {{Event("notificationclick")}} events on the {{domxref("S
 Here a service worker shows a notification with a single "Archive" action, allowing users to perform this common task from the notification without having to open the website. The user can also click the main body of the notification to open their inbox instead.
 
 ```js
-self.registration.showNotification("New mail from Alice", {
-  actions: [
-    {
-      action: 'archive',
-      title: 'Archive'
-    }
-  ]
+navigator.serviceWorker.register('sw.js');
+Notification.requestPermission(function(result) {
+  if (result === 'granted') {
+    navigator.serviceWorker.ready.then(function(registration) {
+      registration.showNotification("New mail from Alice',
+        actions: [
+          {
+            action: 'archive',
+            title: 'Archive'
+          }
+        ]
+      )};
+    )};
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -49,14 +55,6 @@ self.addEventListener('notificationclick', function(event) {
   }
 }, false);
 ```
-
-## Specifications
-
-{{Specifications}}
-
-## Browser compatibility
-
-{{Compat}}
 
 ## See also
 
